@@ -1,0 +1,59 @@
+[
+  {
+    "name": "http_requests",
+    "benchmark_type": "Network",
+    "iterations": 1000,
+    "concurrency": 4,
+    "total_time": 1602.3599,
+    "avg_time": 1.6023599,
+    "min_time": 0.8711,
+    "max_time": 13.4882,
+    "median_time": 1.2074,
+    "std_dev": 1.273254165970797,
+    "throughput": 2496.318086841789,
+    "resource_usage": {
+      "cpu_usage": 50.0,
+      "memory_usage": 200.0,
+      "disk_io": 5.0,
+      "network_io": 1.0
+    }
+  },
+  {
+    "name": "plugin_operations",
+    "benchmark_type": "Mixed",
+    "iterations": 100,
+    "concurrency": 2,
+    "total_time": 69.4325,
+    "avg_time": 0.6943250000000001,
+    "min_time": 0.5753,
+    "max_time": 1.5869,
+    "median_time": 0.6532,
+    "std_dev": 0.14502265710915657,
+    "throughput": 2880.495445216577,
+    "resource_usage": {
+      "cpu_usage": 50.0,
+      "memory_usage": 200.0,
+      "disk_io": 5.0,
+      "network_io": 1.0
+    }
+  },
+  {
+    "name": "command_execution",
+    "benchmark_type": "CPU",
+    "iterations": 500,
+    "concurrency": 4,
+    "total_time": 605.4307,
+    "avg_time": 1.2108614,
+    "min_time": 0.8052,
+    "max_time": 9.508,
+    "median_time": 1.0993,
+    "std_dev": 0.8082498154222115,
+    "throughput": 3303.4334069943925,
+    "resource_usage": {
+      "cpu_usage": 50.0,
+      "memory_usage": 200.0,
+      "disk_io": 5.0,
+      "network_io": 1.0
+    }
+  }
+]

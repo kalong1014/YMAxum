@@ -1,0 +1,26 @@
+[package]
+name = "guf_payment_plugin"
+version = "1.0.0"
+edition = "2021"
+authors = ["YMAxum Team <team@ymaxum.com>"]
+description = "GUF 支付集成插件，提供基于 GUF 的支付功能"
+license = "MIT"
+
+[dependencies]
+ymaxum = { path = "../.." }
+tokio = { version = "1.37", features = ["full"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+anyhow = "1.0"
+reqwest = { version = "0.11", features = ["json"] }
+tokio-tungstenite = "0.21"
+chrono = "0.4"
+rand = "0.8"
+
+[lib]
+crate-type = ["cdylib"]
+name = "guf_payment_plugin"
+
+[[bin]]
+name = "guf_payment_plugin"
+path = "src/bin/main.rs"

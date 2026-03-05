@@ -1,0 +1,29 @@
+[project]
+name = "YMAxum"
+version = "1.0.1"
+directory = "."
+main_binary = "ymaxum"
+
+[build]
+release = true
+features = ["http3"]
+target = "x86_64-pc-windows-msvc"
+
+[packaging]
+create_zip = true
+include_dependencies = true
+include_configs = true
+include_templates = true
+include_plugins = true
+compression_level = 9
+
+[output]
+directory = "./packages"
+package_name = "ymaxum-windows"
+report_file = "packaging_report.md"
+
+[dependencies]
+include_runtime = true
+include_vcredist = true
+vcredist_version = "2022"
+include_openssl = true

@@ -1,0 +1,37 @@
+[security]
+enabled = false
+
+[security.encryption]
+algorithm = "AES-256-GCM"
+key_size = 256
+iv_size = 96
+
+[security.https]
+enabled = false
+min_version = "TLS1.2"
+max_version = "TLS1.3"
+hsts_enabled = false
+hsts_max_age = 31536000
+
+[security.cors]
+enabled = true
+allowed_origins = ["*"]
+allowed_methods = ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"]
+allowed_headers = ["*"]
+exposed_headers = ["Content-Type", "Authorization"]
+max_age = 3600
+
+[security.rate_limiting]
+enabled = false
+requests_per_minute = 60
+burst_size = 10
+
+[security.csrf]
+enabled = false
+token_length = 32
+token_expiry = 3600
+
+[security.xss]
+enabled = false
+sanitize_input = false
+escape_output = false

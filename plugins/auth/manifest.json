@@ -1,0 +1,62 @@
+{
+  "name": "auth",
+  "version": "1.0.0",
+  "author": "YMAxum Team",
+  "description": "认证和授权插件，提供用户验证、API密钥验证和JWT令牌生成功能",
+  "plugin_type": "auth",
+  "dependencies": [
+    {
+      "name": "tokio",
+      "version": "1.0",
+      "dep_type": "crate",
+      "optional": false
+    },
+    {
+      "name": "serde",
+      "version": "1.0",
+      "dep_type": "crate",
+      "optional": false
+    },
+    {
+      "name": "ring",
+      "version": "0.16",
+      "dep_type": "crate",
+      "optional": false
+    }
+  ],
+  "core_version": "1.0.0",
+  "entry_file": "auth.rs",
+  "config_file": "config.toml",
+  "signature_file": "signature.sig",
+  "license": "MIT",
+  "routes": [
+    {
+      "path": "/api/auth/login",
+      "method": "POST",
+      "handler": "login_handler",
+      "description": "用户登录",
+      "require_auth": false
+    },
+    {
+      "path": "/api/auth/register",
+      "method": "POST",
+      "handler": "register_handler",
+      "description": "用户注册",
+      "require_auth": false
+    },
+    {
+      "path": "/api/auth/refresh",
+      "method": "POST",
+      "handler": "refresh_handler",
+      "description": "刷新令牌",
+      "require_auth": true
+    },
+    {
+      "path": "/api/auth/logout",
+      "method": "POST",
+      "handler": "logout_handler",
+      "description": "用户登出",
+      "require_auth": true
+    }
+  ]
+}

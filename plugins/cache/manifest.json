@@ -1,0 +1,62 @@
+{
+  "name": "cache",
+  "version": "1.0.0",
+  "author": "YMAxum Team",
+  "description": "缓存插件，提供内存缓存和Redis分布式缓存功能",
+  "plugin_type": "cache",
+  "dependencies": [
+    {
+      "name": "tokio",
+      "version": "1.0",
+      "dep_type": "crate",
+      "optional": false
+    },
+    {
+      "name": "moka",
+      "version": "0.9",
+      "dep_type": "crate",
+      "optional": false
+    },
+    {
+      "name": "redis",
+      "version": "0.23",
+      "dep_type": "crate",
+      "optional": true
+    }
+  ],
+  "core_version": "1.0.0",
+  "entry_file": "cache.rs",
+  "config_file": "config.toml",
+  "signature_file": "signature.sig",
+  "license": "MIT",
+  "routes": [
+    {
+      "path": "/api/cache/set",
+      "method": "POST",
+      "handler": "set_cache_handler",
+      "description": "设置缓存",
+      "require_auth": true
+    },
+    {
+      "path": "/api/cache/get",
+      "method": "GET",
+      "handler": "get_cache_handler",
+      "description": "获取缓存",
+      "require_auth": true
+    },
+    {
+      "path": "/api/cache/delete",
+      "method": "DELETE",
+      "handler": "delete_cache_handler",
+      "description": "删除缓存",
+      "require_auth": true
+    },
+    {
+      "path": "/api/cache/clear",
+      "method": "POST",
+      "handler": "clear_cache_handler",
+      "description": "清空缓存",
+      "require_auth": true
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+[server]
+address = "0.0.0.0:8080"
+workers = 2
+max_connections = 1000
+timeout = 60
+
+[server.tls]
+enabled = false
+cert_path = ""
+key_path = ""
+
+[server.http3]
+enabled = false
+cert_path = ""
+key_path = ""
+auto_generate_cert = true
+cert_validity_days = 365
+max_concurrent_connections = 100
+connection_timeout_secs = 60
+max_streams = 50

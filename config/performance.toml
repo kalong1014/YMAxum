@@ -1,0 +1,46 @@
+[performance]
+enabled = true
+collect_interval = 30
+report_interval = 120
+
+[performance.middleware]
+enabled = true
+execution_timeout = 5000
+max_chain_length = 20
+cache_ttl = 300
+max_entries = 1000
+
+[performance.http3]
+enabled = false
+max_connections = 1000
+max_streams = 100
+cache_size = 50
+cache_ttl = 3600
+max_entries = 1000
+
+[performance.plugin_routes]
+enabled = true
+lookup_timeout = 500
+cache_ttl = 300
+max_cache_entries = 1000
+
+[general.concurrency]
+worker_threads = 2
+max_blocking_threads = 256
+
+[general.memory]
+enabled = true
+max_memory = 512
+allocator = "system"
+
+[general.logging]
+level = "DEBUG"
+async_logging = true
+buffer_size = 1000
+
+[general.monitoring]
+enabled = true
+collect_interval = 30
+report_interval = 120
+alert_enabled = false
+alert_threshold = 1000

@@ -1,0 +1,117 @@
+version: '3.8'
+
+services:
+  ymaxum:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ymaxum
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./config:/app/config
+      - ./data:/app/data
+      - ./logs:/app/logs
+      - ./plugins:/app/plugins
+    environment:
+      - RUST_LOG=info
+      - APP_ENV=production
+      - DATABASE_URL=mysql://mysql:3306/ymaxum
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - mysql
+      - redis
+    restart: unless-stopped
+    networks:
+      - ymaxum-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 40s
+
+  mysql:
+    image: mysql:8.0
+    container_name: ymaxum-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: ymaxum
+      MYSQL_USER: ymaxum
+      MYSQL_PASSWORD: ymaxumpassword
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    restart: unless-stopped
+    networks:
+      - ymaxum-network
+    command: --default-authentication-plugin=mysql_native_password
+
+  redis:
+    image: redis:7-alpine
+    container_name: ymaxum-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    restart: unless-stopped
+    networks:
+      - ymaxum-network
+    command: redis-server --appendonly yes
+
+  prometheus:
+    image: prom/prometheus:v2.52.0
+    container_name: ymaxum-prometheus
+    volumes:
+      - ./docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-data:/prometheus
+    ports:
+      - "9090:9090"
+    restart: unless-stopped
+    networks:
+      - ymaxum-network
+
+  grafana:
+    image: grafana/grafana:10.5.0
+    container_name: ymaxum-grafana
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./docker/grafana/dashboards:/var/lib/grafana/dashboards
+      - ./docker/grafana/datasources:/etc/grafana/provisioning/datasources
+    ports:
+      - "3001:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-simple-json-datasource
+    restart: unless-stopped
+    depends_on:
+      - prometheus
+    networks:
+      - ymaxum-network
+
+  nginx:
+    image: nginx:alpine
+    container_name: ymaxum-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./docker/nginx/ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - ymaxum
+    restart: unless-stopped
+    networks:
+      - ymaxum-network
+
+volumes:
+  mysql-data:
+  redis-data:
+  prometheus-data:
+  grafana-data:
+
+networks:
+  ymaxum-network:
+    driver: bridge

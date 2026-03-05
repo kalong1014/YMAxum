@@ -1,0 +1,15 @@
+[logging]
+level = "DEBUG"
+format = "text"
+output = "stdout"
+
+[logging.file]
+enabled = true
+path = "./logs/app.log"
+max_size = 100
+max_files = 5
+max_age = 7
+
+[logging.console]
+enabled = true
+color = true

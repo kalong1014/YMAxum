@@ -1,0 +1,34 @@
+# 认证插件配置
+
+[auth]
+# JWT密钥
+jwt_secret = "your-secret-key"
+
+# 令牌过期时间（秒）
+access_token_expiry = 3600
+refresh_token_expiry = 604800
+
+# 密码策略
+[auth.password_policy]
+min_length = 8
+require_uppercase = true
+require_lowercase = true
+require_number = true
+require_special = true
+
+# 账户锁定策略
+[auth.account_lockout]
+enabled = true
+max_attempts = 5
+lockout_duration = 300
+
+# 注册策略
+[auth.registration]
+enabled = true
+verify_email = false
+welcome_email = false
+
+# 日志配置
+[auth.logging]
+enabled = true
+level = "info"

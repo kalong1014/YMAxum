@@ -1,0 +1,9 @@
+name = "csharp-example"
+version = "1.0.0"
+description = "C#示例插件"
+author = "GUF Team"
+type = "example"
+language = "csharp"
+platform = ["windows", "linux", "macos"]
+
+[dependencies]

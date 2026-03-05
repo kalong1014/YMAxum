@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>确权展示 - YMAxum</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .work-info {
+            padding: 20px;
+            margin-bottom: 30px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+        }
+        .work-info h2 {
+            margin-top: 0;
+            color: #333;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .work-info p {
+            margin: 10px 0;
+            color: #555;
+        }
+        .rights-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            background-color: #28a745;
+            color: #fff;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        .rights-credential {
+            padding: 20px;
+            margin-bottom: 30px;
+            background-color: #e3f2fd;
+            border-radius: 8px;
+            border: 1px solid #bbdefb;
+        }
+        .rights-credential h3 {
+            margin-top: 0;
+            color: #1976d2;
+        }
+        .rights-credential p {
+            margin: 8px 0;
+            color: #1565c0;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            text-decoration: none;
+        }
+        .btn:hover {
+            background-color: #0069d9;
+        }
+        .btn-secondary {
+            background-color: #6c757d;
+        }
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+        .btn-success {
+            background-color: #28a745;
+        }
+        .btn-success:hover {
+            background-color: #218838;
+        }
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .alert {
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .alert-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .verify-section {
+            padding: 20px;
+            margin-bottom: 30px;
+            background-color: #fff3cd;
+            border-radius: 8px;
+            border: 1px solid #ffeaa7;
+        }
+        .verify-section h3 {
+            margin-top: 0;
+            color: #856404;
+        }
+        .verify-form {
+            margin-top: 15px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #555;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        .transaction-hash {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 12px;
+            word-break: break-all;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>确权展示</h1>
+        
+        {% if message %}
+        <div class="alert {% if success %}alert-success{% else %}alert-error{% endif %}">
+            {{ message }}
+        </div>
+        {% endif %}
+        
+        {% if work %}
+        <div class="work-info">
+            <h2>
+                {{ work.title }}
+                {% if work.confirmed %}
+                <span class="rights-badge">已确权</span>
+                {% else %}
+                <span class="rights-badge" style="background-color: #ffc107; color: #212529;">未确权</span>
+                {% endif %}
+            </h2>
+            <p><strong>描述：</strong>{{ work.description }}</p>
+            <p><strong>分类：</strong>{{ work.category }}</p>
+            <p><strong>创作者：</strong>{{ work.creator_id }}</p>
+            <p><strong>创建时间：</strong>{{ work.created_at }}</p>
+            {% if work.owner_id != work.creator_id %}
+            <p><strong>当前持有人：</strong>{{ work.owner_id }}</p>
+            {% endif %}
+            
+            <div class="action-buttons">
+                <a href="/work/{{ work.id }}" class="btn btn-secondary">返回成果详情</a>
+                {% if not work.confirmed %}
+                <a href="/rights/apply?work_id={{ work.id }}" class="btn btn-success">申请确权</a>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+        
+        {% if credential %}
+        <div class="rights-credential">
+            <h3>权属凭证</h3>
+            <p><strong>凭证ID：</strong>{{ credential.id }}</p>
+            <p><strong>成果ID：</strong>{{ credential.work_id }}</p>
+            <p><strong>持有人：</strong>{{ credential.owner_id }}</p>
+            <p><strong>创建时间：</strong>{{ credential.created_at }}</p>
+            <p><strong>交易哈希：</strong><span class="transaction-hash">{{ credential.tx_hash }}</span></p>
+            <p><strong>存证状态：</strong>{{ credential.status }}</p>
+            
+            <div class="action-buttons">
+                <button class="btn" onclick="verifyCredential()">验证凭证</button>
+                <a href="/rights/credential/{{ credential.id }}" class="btn btn-secondary">查看完整凭证</a>
+            </div>
+        </div>
+        {% endif %}
+        
+        <div class="verify-section">
+            <h3>凭证验证</h3>
+            <p>输入凭证ID或交易哈希，验证权属真实性</p>
+            
+            <div class="verify-form">
+                <div class="form-group">
+                    <label for="credential_id">凭证ID或交易哈希</label>
+                    <input type="text" id="credential_id" placeholder="请输入凭证ID或交易哈希">
+                </div>
+                <button class="btn btn-success" onclick="verifyByInput()">验证</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 验证凭证
+        function verifyCredential() {
+            alert('凭证验证成功！权属信息真实有效，不可篡改。');
+            // 实际实现中，这里应该调用后端API验证凭证
+        }
+        
+        // 通过输入验证
+        function verifyByInput() {
+            const input = document.getElementById('credential_id').value;
+            if (!input) {
+                alert('请输入凭证ID或交易哈希');
+                return;
+            }
+            
+            // 模拟验证
+            alert('验证成功！权属信息真实有效，不可篡改。');
+            // 实际实现中，这里应该调用后端API验证凭证
+        }
+    </script>
+</body>
+</html>

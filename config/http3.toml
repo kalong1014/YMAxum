@@ -1,0 +1,16 @@
+[http3]
+enabled = false
+addr = "0.0.0.0:443"
+cert_path = ""
+key_path = ""
+auto_generate_cert = true
+cert_validity_days = 365
+max_concurrent_connections = 100
+connection_timeout_secs = 60
+max_streams = 50
+
+[http3.cache]
+enabled = true
+cache_size = 50
+cache_ttl = 3600
+max_entries = 1000

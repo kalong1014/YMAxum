@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>一键确权申请 - YMAxum</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #555;
+        }
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        textarea {
+            resize: vertical;
+            min-height: 150px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .btn:hover {
+            background-color: #0069d9;
+        }
+        .btn-primary {
+            background-color: #007bff;
+        }
+        .btn-primary:hover {
+            background-color: #0069d9;
+        }
+        .form-actions {
+            text-align: center;
+            margin-top: 30px;
+        }
+        .alert {
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .alert-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .work-info {
+            padding: 15px;
+            margin-bottom: 20px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            border-left: 4px solid #007bff;
+        }
+        .work-info h3 {
+            margin-top: 0;
+            color: #333;
+        }
+        .work-info p {
+            margin: 5px 0;
+            color: #555;
+        }
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            margin-top: 20px;
+        }
+        .loading.show {
+            display: block;
+        }
+        .spinner {
+            border: 4px solid rgba(0, 123, 255, 0.3);
+            border-radius: 50%;
+            border-top: 4px solid #007bff;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>一键确权申请</h1>
+        
+        {% if message %}
+        <div class="alert {% if success %}alert-success{% else %}alert-error{% endif %}">
+            {{ message }}
+        </div>
+        {% endif %}
+        
+        {% if work %}
+        <div class="work-info">
+            <h3>成果信息</h3>
+            <p><strong>标题：</strong>{{ work.title }}</p>
+            <p><strong>描述：</strong>{{ work.description }}</p>
+            <p><strong>分类：</strong>{{ work.category }}</p>
+            <p><strong>发布时间：</strong>{{ work.created_at }}</p>
+        </div>
+        {% endif %}
+        
+        <form method="post">
+            <div class="form-group">
+                <label for="work_id">成果ID</label>
+                <input type="text" id="work_id" name="work_id" value="{{ work_id }}" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="description">确权说明</label>
+                <textarea id="description" name="description" placeholder="请填写确权说明"></textarea>
+            </div>
+            
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary" id="submit-btn">一键确权申请</button>
+            </div>
+        </form>
+        
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>正在处理确权申请，请稍候...</p>
+            <p>正在生成权属凭证...</p>
+            <p>正在完成链上存证...</p>
+        </div>
+    </div>
+    
+    <script>
+        // 表单提交处理
+        document.querySelector('form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const workId = document.getElementById('work_id').value;
+            const description = document.getElementById('description').value;
+            
+            if (!workId) {
+                alert('请填写成果ID');
+                return;
+            }
+            
+            // 显示加载状态
+            document.getElementById('loading').classList.add('show');
+            document.getElementById('submit-btn').disabled = true;
+            
+            // 模拟异步处理
+            setTimeout(() => {
+                // 提交表单
+                this.submit();
+            }, 3000);
+        });
+    </script>
+</body>
+</html>

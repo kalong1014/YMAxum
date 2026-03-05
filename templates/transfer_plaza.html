@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>积分转让广场 - YMAxum</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .filter-section {
+            padding: 15px;
+            margin-bottom: 20px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+        }
+        .filter-form {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .form-group {
+            flex: 1;
+            min-width: 200px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #555;
+        }
+        input[type="text"],
+        select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        .btn {
+            display: inline-block;
+            padding: 8px 16px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            align-self: flex-end;
+        }
+        .btn:hover {
+            background-color: #0069d9;
+        }
+        .btn-primary {
+            background-color: #007bff;
+        }
+        .btn-primary:hover {
+            background-color: #0069d9;
+        }
+        .btn-success {
+            background-color: #28a745;
+        }
+        .btn-success:hover {
+            background-color: #218838;
+        }
+        .transfer-list {
+            margin-top: 20px;
+        }
+        .transfer-item {
+            padding: 15px;
+            margin-bottom: 15px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            border: 1px solid #e9ecef;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .transfer-item:hover {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .user-info {
+            flex: 1;
+        }
+        .user-info h3 {
+            margin: 0 0 5px 0;
+            color: #333;
+        }
+        .user-info p {
+            margin: 3px 0;
+            color: #555;
+            font-size: 14px;
+        }
+        .points-info {
+            text-align: right;
+            margin-right: 20px;
+        }
+        .points-amount {
+            font-size: 20px;
+            font-weight: bold;
+            color: #28a745;
+        }
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        .alert {
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .alert-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .level-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            background-color: #007bff;
+            color: #fff;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 500;
+            margin-left: 5px;
+        }
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+            gap: 5px;
+        }
+        .pagination a {
+            padding: 8px 12px;
+            background-color: #f8f9fa;
+            color: #007bff;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        .pagination a:hover {
+            background-color: #e9ecef;
+        }
+        .pagination .active {
+            background-color: #007bff;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>积分转让广场</h1>
+        
+        {% if message %}
+        <div class="alert {% if success %}alert-success{% else %}alert-error{% endif %}">
+            {{ message }}
+        </div>
+        {% endif %}
+        
+        <div class="filter-section">
+            <h3>筛选条件</h3>
+            <form class="filter-form">
+                <div class="form-group">
+                    <label for="min_points">最低积分</label>
+                    <input type="text" id="min_points" name="min_points" placeholder="输入最低积分">
+                </div>
+                <div class="form-group">
+                    <label for="max_points">最高积分</label>
+                    <input type="text" id="max_points" name="max_points" placeholder="输入最高积分">
+                </div>
+                <div class="form-group">
+                    <label for="level">用户等级</label>
+                    <select id="level" name="level">
+                        <option value="">全部等级</option>
+                        <option value="2">Lv2 及以上</option>
+                        <option value="3">Lv3 及以上</option>
+                        <option value="4">Lv4 及以上</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">筛选</button>
+            </form>
+        </div>
+        
+        <div class="transfer-list">
+            {% if transfers %}
+                {% for transfer in transfers %}
+                <div class="transfer-item">
+                    <div class="user-info">
+                        <h3>
+                            {{ transfer.username }}
+                            <span class="level-badge">Lv{{ transfer.level }}</span>
+                        </h3>
+                        <p><strong>可赠予积分：</strong>{{ transfer.available_points }} 积分</p>
+                        <p><strong>发布时间：</strong>{{ transfer.created_at }}</p>
+                        <p><strong>转让限制：</strong>最低 {{ transfer.min_transfer }} 积分</p>
+                    </div>
+                    <div class="points-info">
+                        <div class="points-amount">{{ transfer.available_points }} 积分</div>
+                        <p>可赠予</p>
+                    </div>
+                    <div class="action-buttons">
+                        <a href="/chat/{{ transfer.user_id }}" class="btn">站内聊天</a>
+                        <a href="/transfer/apply?user_id={{ transfer.user_id }}" class="btn btn-success">发起申请</a>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="alert alert-error">
+                    暂无积分转让意向
+                </div>
+            {% endif %}
+        </div>
+        
+        <div class="pagination">
+            <a href="?page=1">首页</a>
+            {% if page > 1 %}
+            <a href="?page={{ page - 1 }}">上一页</a>
+            {% endif %}
+            <a href="?page={{ page }}" class="active">{{ page }}</a>
+            {% if page < total_pages %}
+            <a href="?page={{ page + 1 }}">下一页</a>
+            {% endif %}
+            <a href="?page={{ total_pages }}">末页</a>
+        </div>
+        
+        <div class="action-buttons" style="margin-top: 30px; justify-content: center;">
+            <a href="/transfer/publish" class="btn btn-success">发布转让意向</a>
+        </div>
+    </div>
+    
+    <script>
+        // 显示加载状态
+        function showLoading(element) {
+            element.disabled = true;
+            element.innerHTML = '处理中...';
+        }
+        
+        // 隐藏加载状态
+        function hideLoading(element, originalText) {
+            element.disabled = false;
+            element.innerHTML = originalText;
+        }
+        
+        // 显示错误信息
+        function showError(message) {
+            alert('错误：' + message);
+        }
+        
+        // 显示成功信息
+        function showSuccess(message) {
+            alert('成功：' + message);
+        }
+        
+        // 筛选表单提交
+        document.querySelector('.filter-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const minPoints = document.getElementById('min_points').value;
+            const maxPoints = document.getElementById('max_points').value;
+            const level = document.getElementById('level').value;
+            
+            try {
+                // 发送筛选请求到后端API
+                const response = await fetch('/api/points/transfer/plaza', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    params: {
+                        min_points: minPoints,
+                        max_points: maxPoints,
+                        level: level
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error('筛选失败');
+                }
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    // 更新转让列表
+                    updateTransferList(result.data.transfers);
+                } else {
+                    throw new Error(result.message || '筛选失败');
+                }
+            } catch (error) {
+                showError(error.message);
+            }
+        });
+        
+        // 更新转让列表
+        function updateTransferList(transfers) {
+            const transferList = document.querySelector('.transfer-list');
+            
+            if (transfers.length === 0) {
+                transferList.innerHTML = '<p class="text-center text-muted">暂无符合条件的转让意向</p>';
+                return;
+            }
+            
+            let html = '';
+            transfers.forEach(transfer => {
+                html += `
+                <div class="transfer-item">
+                    <div class="user-info">
+                        <h3>
+                            ${transfer.username}
+                            <span class="level-badge">Lv${transfer.level}</span>
+                        </h3>
+                        <p><strong>可赠予积分：</strong>${transfer.available_points} 积分</p>
+                        <p><strong>发布时间：</strong>${new Date(transfer.created_at).toLocaleString('zh-CN')}</p>
+                        <p><strong>转让限制：</strong>最低 ${transfer.min_transfer} 积分</p>
+                    </div>
+                    <div class="points-info">
+                        <div class="points-amount">${transfer.available_points} 积分</div>
+                        <p>可赠予</p>
+                    </div>
+                    <div class="action-buttons">
+                        <a href="/chat/${transfer.user_id}" class="btn">站内聊天</a>
+                        <a href="/transfer/apply?user_id=${transfer.user_id}" class="btn btn-success">发起申请</a>
+                    </div>
+                </div>
+                `;
+            });
+            
+            transferList.innerHTML = html;
+        }
+        
+        // 发起申请按钮点击事件
+        document.addEventListener('click', async function(e) {
+            if (e.target.classList.contains('btn-success') && e.target.textContent.trim() === '发起申请') {
+                e.preventDefault();
+                
+                const userId = new URL(e.target.href).searchParams.get('user_id');
+                
+                const amount = prompt('请输入要申请的积分数量：');
+                if (!amount || isNaN(amount) || parseFloat(amount) <= 0) {
+                    alert('请输入有效的积分数量');
+                    return;
+                }
+                
+                showLoading(e.target);
+                const originalText = e.target.innerHTML;
+                
+                try {
+                    // 发送申请到后端API
+                    const response = await fetch('/api/points/transfer/request', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            to_user_id: userId,
+                            amount: parseFloat(amount),
+                            description: '积分赠予申请'
+                        })
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error('发起申请失败');
+                    }
+                    
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        showSuccess('申请已成功发起，请等待对方确认');
+                    } else {
+                        throw new Error(result.message || '发起申请失败');
+                    }
+                } catch (error) {
+                    showError(error.message);
+                } finally {
+                    hideLoading(e.target, originalText);
+                }
+            }
+        });
+        
+        // 发布转让意向按钮点击事件
+        document.querySelector('a[href="/transfer/publish"]').addEventListener('click', async function(e) {
+            e.preventDefault();
+            
+            const availablePoints = prompt('请输入您可赠予的积分数量：');
+            if (!availablePoints || isNaN(availablePoints) || parseFloat(availablePoints) <= 0) {
+                alert('请输入有效的积分数量');
+                return;
+            }
+            
+            const minTransfer = prompt('请输入最低转让数量：');
+            if (!minTransfer || isNaN(minTransfer) || parseFloat(minTransfer) <= 0) {
+                alert('请输入有效的最低转让数量');
+                return;
+            }
+            
+            try {
+                // 发送发布请求到后端API
+                const response = await fetch('/api/points/transfer/publish', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        available_points: parseFloat(availablePoints),
+                        min_transfer: parseFloat(minTransfer)
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error('发布转让意向失败');
+                }
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showSuccess('转让意向发布成功');
+                    // 刷新页面
+                    window.location.reload();
+                } else {
+                    throw new Error(result.message || '发布转让意向失败');
+                }
+            } catch (error) {
+                showError(error.message);
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>成果发布 - YMAxum</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #555;
+        }
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        textarea {
+            resize: vertical;
+            min-height: 150px;
+        }
+        input[type="file"] {
+            margin-top: 5px;
+        }
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+        }
+        input[type="checkbox"] {
+            margin-right: 10px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .btn:hover {
+            background-color: #0069d9;
+        }
+        .btn-primary {
+            background-color: #007bff;
+        }
+        .btn-primary:hover {
+            background-color: #0069d9;
+        }
+        .form-actions {
+            text-align: center;
+            margin-top: 30px;
+        }
+        .alert {
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .alert-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>成果发布</h1>
+        
+        {% if message %}
+        <div class="alert {% if success %}alert-success{% else %}alert-error{% endif %}">
+            {{ message }}
+        </div>
+        {% endif %}
+        
+        <form method="post" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="title">成果标题</label>
+                <input type="text" id="title" name="title" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="description">成果描述</label>
+                <textarea id="description" name="description" required></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="file">上传成果文件</label>
+                <input type="file" id="file" name="file" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="category">分类</label>
+                <input type="text" id="category" name="category" required>
+            </div>
+            
+            <div class="form-group checkbox-group">
+                <input type="checkbox" id="decentralized" name="decentralized">
+                <label for="decentralized">去中心化确权存证</label>
+            </div>
+            
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">发布成果</button>
+            </div>
+        </form>
+    </div>
+    
+    <script>
+        // 表单验证
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const title = document.getElementById('title').value;
+            const description = document.getElementById('description').value;
+            const file = document.getElementById('file').files[0];
+            const category = document.getElementById('category').value;
+            
+            if (!title || !description || !file || !category) {
+                alert('请填写所有必填字段');
+                e.preventDefault();
+                return;
+            }
+            
+            // 检查文件大小
+            if (file.size > 10 * 1024 * 1024) { // 10MB
+                alert('文件大小不能超过10MB');
+                e.preventDefault();
+                return;
+            }
+        });
+    </script>
+</body>
+</html>

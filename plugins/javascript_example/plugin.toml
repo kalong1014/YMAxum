@@ -1,0 +1,9 @@
+name = "javascript-example"
+version = "1.0.0"
+description = "JavaScript示例插件"
+author = "GUF Team"
+type = "example"
+language = "javascript"
+platform = ["windows", "linux", "macos"]
+
+[dependencies]

@@ -1,0 +1,54 @@
+# 构建产物
+target/
+dist/
+
+# 依赖目录
+node_modules/
+
+# 本地配置文件
+.env
+.env.local
+.env.*.local
+
+# 日志文件
+logs/
+*.log
+
+# 临时文件
+*.tmp
+*.temp
+
+# IDE配置
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# 操作系统文件
+.DS_Store
+Thumbs.db
+
+# 证书和密钥
+*.pem
+*.key
+*.crt
+
+# 测试覆盖率报告
+coverage/
+
+# 文档构建产物
+docs/build/
+
+# 插件构建产物
+plugins/*/target/
+
+# 配置备份
+config/*.bak
+config/*.backup
+
+# 审计日志
+config/audit/
+
+# 版本历史
+config/versions/

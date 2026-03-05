@@ -1,0 +1,63 @@
+# 使用默认的crates.io源
+# [source.crates-io]
+# replace-with = "vendored-sources"
+# 
+# [source.vendored-sources]
+# directory = "vendor"
+
+# Windows平台构建配置
+[target.x86_64-pc-windows-msvc]
+# 配置调试信息格式
+rustflags = [
+    "-C", "debuginfo=2",
+    "-C", "debug-assertions=on",
+    "-C", "overflow-checks=on",
+    "-C", "panic=unwind",
+    # 优化PDB文件生成
+    "-C", "link-arg=/DEBUG:FULL",
+    "-C", "link-arg=/PDBALTPATH:%_PDB%",
+    "-C", "link-arg=/INCREMENTAL:NO",
+    "-C", "link-arg=/OPT:REF",
+    "-C", "link-arg=/OPT:ICF",
+]
+
+# Windows平台特定的配置
+[target.i686-pc-windows-msvc]
+rustflags = [
+    "-C", "debuginfo=2",
+    "-C", "debug-assertions=on",
+    "-C", "overflow-checks=on",
+    "-C", "panic=unwind",
+    "-C", "link-arg=/DEBUG:FULL",
+    "-C", "link-arg=/PDBALTPATH:%_PDB%",
+    "-C", "link-arg=/INCREMENTAL:NO",
+    "-C", "link-arg=/OPT:REF",
+    "-C", "link-arg=/OPT:ICF",
+]
+
+# 通用构建配置
+[build]
+# 配置并行构建数量
+jobs = 4
+# 配置构建目标
+# target = "x86_64-pc-windows-msvc"
+
+# 配置编译优化级别
+[profile.dev]
+opt-level = 0
+debug = 2
+debug-assertions = true
+overflow-checks = true
+lto = false
+panic = "unwind"
+
+[profile.release]
+opt-level = 3
+debug = 1
+debug-assertions = false
+overflow-checks = false
+lto = true
+panic = "unwind"
+incremental = false
+codegen-units = 1
+rpath = false

@@ -1,0 +1,58 @@
+{
+  "name": "guf_analytics_plugin",
+  "version": "1.0.0",
+  "author": "GUF Team",
+  "description": "GUF Analytics Plugin - Data collection and analysis for GUF ecosystem",
+  "license": "MIT",
+  "repository": "https://github.com/guf-team/analytics-plugin",
+  "homepage": "https://guf.io/plugins/analytics",
+  "keywords": [
+    "guf",
+    "analytics",
+    "data-collection",
+    "data-analysis",
+    "monitoring"
+  ],
+  "capabilities": [
+    "data_collection",
+    "data_analysis",
+    "realtime_monitoring",
+    "system_performance",
+    "component_health",
+    "event_statistics"
+  ],
+  "dependencies": [],
+  "configuration": {
+    "collection_interval": 60,
+    "storage_path": "./analytics_data",
+    "realtime_analysis": true,
+    "retention_days": 30
+  },
+  "compatibility": {
+    "guf_version": ">=1.0.0",
+    "rust_version": ">=1.60.0",
+    "os": [
+      "windows",
+      "linux",
+      "macos"
+    ]
+  },
+  "security": {
+    "permissions": [
+      "system_info",
+      "file_system:read_write",
+      "network:outbound"
+    ],
+    "sandboxed": true
+  },
+  "performance": {
+    "memory_usage": "low",
+    "cpu_usage": "low",
+    "disk_usage": "medium"
+  },
+  "maintenance": {
+    "status": "active",
+    "last_updated": "2026-02-04",
+    "support_email": "support@guf.io"
+  }
+}

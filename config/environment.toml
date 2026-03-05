@@ -1,0 +1,11 @@
+[environment]
+name = "development"
+
+[environment.variables]
+APP_NAME = "YMAxum"
+APP_VERSION = "1.2.0"
+
+[environment.paths]
+base_dir = "."
+temp_dir = "./temp"
+data_dir = "./data"

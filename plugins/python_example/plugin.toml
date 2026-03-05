@@ -1,0 +1,9 @@
+name = "python-example"
+version = "1.0.0"
+description = "Python示例插件"
+author = "GUF Team"
+type = "example"
+language = "python"
+platform = ["windows", "linux", "macos"]
+
+[dependencies]

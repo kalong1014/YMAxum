@@ -1,0 +1,277 @@
+# YMAxum 多环境部署配置
+
+[project]
+name = "YMAxum"
+version = "1.6.0"
+directory = "."
+main_binary = "ymaxum"
+
+[[environments]]
+name = "development"
+type_env = "local"
+url = "http://localhost:8080"
+
+[environments.ssh_config]
+host = "localhost"
+port = 22
+user = "admin"
+
+[environments.docker_config]
+enabled = true
+image_name = "ymaxum:dev"
+dockerfile = "Dockerfile"
+context = "."
+
+[[environments.docker_config.ports]]
+name = "web"
+host = 8080
+container = 8080
+protocol = "tcp"
+
+[[environments.docker_config.env_vars]]
+name = "RUST_LOG"
+value = "debug"
+sensitive = false
+
+[[environments.docker_config.volumes]]
+name = "logs"
+host = "./logs"
+container = "/app/logs"
+mode = "rw"
+
+[[environments.variables]]
+name = "ENV"
+value = "development"
+sensitive = false
+
+[[environments.variables]]
+name = "DATABASE_URL"
+value = "sqlite:./development.db"
+sensitive = true
+
+[environments.health_check]
+enabled = true
+endpoint = "/health"
+timeout = 30
+try_count = 3
+retry_interval = 5
+expected_status = 200
+
+[[environments]]
+name = "testing"
+type_env = "remote"
+url = "http://testing.ymaxum.org"
+
+[environments.ssh_config]
+host = "testing.ymaxum.org"
+port = 22
+user = "deployer"
+key_file = "./keys/testing_id_rsa"
+
+[[environments.variables]]
+name = "ENV"
+value = "testing"
+sensitive = false
+
+[[environments.variables]]
+name = "DATABASE_URL"
+value = "postgresql://user:pass@db.testing.ymaxum.org:5432/ymaxum"
+sensitive = true
+
+[environments.health_check]
+enabled = true
+endpoint = "/health"
+timeout = 60
+try_count = 5
+retry_interval = 10
+expected_status = 200
+
+[[environments]]
+name = "production"
+type_env = "remote"
+url = "http://prod.ymaxum.org"
+
+[environments.ssh_config]
+host = "prod.ymaxum.org"
+port = 22
+user = "deployer"
+key_file = "./keys/production_id_rsa"
+
+[[environments.variables]]
+name = "ENV"
+value = "production"
+sensitive = false
+
+[[environments.variables]]
+name = "DATABASE_URL"
+value = "postgresql://user:pass@db.prod.ymaxum.org:5432/ymaxum"
+sensitive = true
+
+[environments.health_check]
+enabled = true
+endpoint = "/health"
+timeout = 120
+try_count = 10
+retry_interval = 15
+expected_status = 200
+
+[[strategies]]
+name = "default"
+type_strategy = "simple"
+
+[[strategies.steps]]
+name = "build"
+type_step = "command"
+command = "cargo"
+args = ["build", "--release"]
+env_vars = []
+timeout = 300
+retry_count = 0
+retry_interval = 0
+
+[[strategies.steps]]
+name = "copy_binary"
+type_step = "command"
+command = "copy"
+args = ["target/release/ymaxum.exe", "./deployments/{{env}}/"]
+env_vars = []
+timeout = 60
+retry_count = 0
+retry_interval = 0
+
+[[strategies.steps]]
+name = "restart_service"
+type_step = "command"
+command = "cmd"
+args = ["/c", "net", "stop", "ymaxum", "&&", "net", "start", "ymaxum"]
+env_vars = []
+timeout = 120
+retry_count = 2
+retry_interval = 10
+
+[[strategies]]
+name = "docker"
+type_strategy = "docker"
+
+[[strategies.steps]]
+name = "build_image"
+type_step = "command"
+command = "docker"
+args = ["build", "-t", "ymaxum:{{env}}", "."]
+env_vars = []
+timeout = 600
+retry_count = 0
+retry_interval = 0
+
+[[strategies.steps]]
+name = "stop_container"
+type_step = "command"
+command = "docker"
+args = ["stop", "ymaxum-{{env}}", "||", "true"]
+env_vars = []
+timeout = 60
+retry_count = 0
+retry_interval = 0
+
+[[strategies.steps]]
+name = "remove_container"
+type_step = "command"
+command = "docker"
+args = ["rm", "ymaxum-{{env}}", "||", "true"]
+env_vars = []
+timeout = 60
+retry_count = 0
+retry_interval = 0
+
+[[strategies.steps]]
+name = "run_container"
+type_step = "command"
+command = "docker"
+args = ["run", "-d", "--name", "ymaxum-{{env}}", "-p", "8080:8080", "ymaxum:{{env}}"]
+env_vars = []
+timeout = 60
+retry_count = 0
+retry_interval = 0
+
+[docker]
+enabled = true
+image_name = "ymaxum"
+dockerfile = "Dockerfile"
+context = "."
+
+[[docker.ports]]
+name = "web"
+host = 8080
+container = 8080
+protocol = "tcp"
+
+[[docker.env_vars]]
+name = "RUST_LOG"
+value = "info"
+sensitive = false
+
+[[docker.volumes]]
+name = "logs"
+host = "./logs"
+container = "/app/logs"
+mode = "rw"
+
+[kubernetes]
+enabled = false
+context = "default"
+namespace = "ymaxum"
+manifests_dir = "./kubernetes/manifests"
+helm_charts_dir = "./kubernetes/helm"
+chart_name = "ymaxum"
+release_name = "ymaxum"
+
+[ansible]
+enabled = false
+playbook_dir = "./ansible/playbooks"
+inventory_file = "./ansible/inventory.ini"
+roles_dir = "./ansible/roles"
+
+[[ansible.extra_vars]]
+name = "env"
+value = "{{env}}"
+sensitive = false
+
+[terraform]
+enabled = false
+working_dir = "./terraform"
+var_file = "terraform.tfvars"
+
+[notify]
+enabled = false
+webhook_url = "https://webhook.site/your-webhook-url"
+
+[notify.email]
+smtp_server = "smtp.example.com"
+smtp_port = 587
+username = "deploy@example.com"
+password = "your-email-password"
+from = "deploy@example.com"
+to = ["admin@example.com"]
+
+[notify.slack]
+webhook_url = "https://hooks.slack.com/services/YOUR/SLACK/WEBHOOK"
+channel = "#deployments"
+username = "YMAxum Deployer"
+
+[output]
+directory = "./deployments"
+log_file = "deployment.log"
+report_file = "deployment_report.md"
+
+[health_check]
+enabled = true
+endpoint = "/health"
+timeout = 60
+try_count = 5
+retry_interval = 10
+expected_status = 200
+
+[deployment_history]
+enabled = true
+directory = "./deployments/history"
+max_history = 50

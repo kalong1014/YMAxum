@@ -1,0 +1,119 @@
+{
+  "market": {
+    "name": "YMAxum Plugin Market",
+    "version": "2.0.0",
+    "description": "YMAxum插件市场，支持GUF插件",
+    "api_endpoint": "http://localhost:3000/api/marketplace",
+    "guf_support": true,
+    "guf_version": "1.0.0"
+  },
+  "repository": {
+    "url": "https://github.com/ymaxum/plugins.git",
+    "branch": "main",
+    "username": null,
+    "password": null
+  },
+  "plugins": [
+    {
+      "name": "customer_service",
+      "version": "1.0.0",
+      "category": "customer_service",
+      "description": "客服插件，提供客户咨询和服务功能",
+      "author": "YMAxum Team",
+      "license": "MIT",
+      "repository": "plugins/customer_service",
+      "tags": ["customer_service", "support", "chat"],
+      "dependencies": [],
+      "guf_compatible": true,
+      "guf_version": "1.0.0"
+    },
+    {
+      "name": "im",
+      "version": "1.0.0",
+      "category": "im",
+      "description": "即时通讯插件，提供实时消息功能",
+      "author": "YMAxum Team",
+      "license": "MIT",
+      "repository": "plugins/im",
+      "tags": ["im", "chat", "realtime"],
+      "dependencies": [],
+      "guf_compatible": true,
+      "guf_version": "1.0.0"
+    },
+    {
+      "name": "security",
+      "version": "1.0.0",
+      "category": "security",
+      "description": "安全插件，提供系统安全防护功能",
+      "author": "YMAxum Team",
+      "license": "MIT",
+      "repository": "plugins/security",
+      "tags": ["security", "protection", "scanning"],
+      "dependencies": [],
+      "guf_compatible": true,
+      "guf_version": "1.0.0"
+    },
+    {
+      "name": "performance",
+      "version": "1.0.0",
+      "category": "performance",
+      "description": "性能插件，提供系统性能监控和优化功能",
+      "author": "YMAxum Team",
+      "license": "MIT",
+      "repository": "plugins/performance",
+      "tags": ["performance", "monitoring", "optimization"],
+      "dependencies": [],
+      "guf_compatible": true,
+      "guf_version": "1.0.0"
+    },
+    {
+      "name": "scene",
+      "version": "1.0.0",
+      "category": "scene",
+      "description": "场景插件，提供特定场景的功能支持",
+      "author": "YMAxum Team",
+      "license": "MIT",
+      "repository": "plugins/scene",
+      "tags": ["scene", "specific", "support"],
+      "dependencies": [],
+      "guf_compatible": true,
+      "guf_version": "1.0.0"
+    },
+    {
+      "name": "guf_auth",
+      "version": "1.0.0",
+      "category": "authentication",
+      "description": "GUF 身份验证插件，提供基于 GUF 的身份验证功能",
+      "author": "YMAxum Team",
+      "license": "MIT",
+      "repository": "plugins/guf_auth",
+      "tags": ["guf", "authentication", "security"],
+      "dependencies": [],
+      "guf_compatible": true,
+      "guf_version": "1.0.0"
+    },
+    {
+      "name": "guf_payment",
+      "version": "1.0.0",
+      "category": "payment",
+      "description": "GUF 支付集成插件，提供基于 GUF 的支付功能",
+      "author": "YMAxum Team",
+      "license": "MIT",
+      "repository": "plugins/guf_payment",
+      "tags": ["guf", "payment", "integration"],
+      "dependencies": [],
+      "guf_compatible": true,
+      "guf_version": "1.0.0"
+    }
+  ],
+  "output": {
+    "directory": "data/plugin_market",
+    "format": "json",
+    "compress": true
+  },
+  "security": {
+    "enable_signature": true,
+    "key_directory": "plugins/keys",
+    "verify_checksums": true
+  }
+}

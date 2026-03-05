@@ -1,0 +1,9 @@
+name = "java-example"
+version = "1.0.0"
+description = "Java示例插件"
+author = "GUF Team"
+type = "example"
+language = "java"
+platform = ["windows", "linux", "macos"]
+
+[dependencies]

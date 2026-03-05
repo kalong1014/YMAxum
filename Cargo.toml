@@ -1,0 +1,276 @@
+[package]
+name = "ymaxum"
+version = "1.6.0"
+edition = "2024"
+
+[profile.release]
+opt-level = "z"  # 优化大小
+lto = false      # 暂时禁用LTO以减少内存使用
+codegen-units = 4  # 增加代码生成单元以减少内存使用
+panic = "abort"    # 使用abort而不是unwind来减小大小
+strip = true       # 移除符号表
+
+[lib]
+name = "ymaxum"
+path = "src/lib.rs"
+
+[dependencies]
+axum = { version = "0.8.8", features = ["ws"] }
+tower = "0.5.3"
+tokio = { version = "1", features = ["full", "rt-multi-thread"] }
+
+# 数据库依赖（通过功能标志控制）
+sqlx = { version = "0.8.6", features = ["runtime-tokio", "macros"], optional = true }
+
+# 缓存依赖（通过功能标志控制）
+moka = { version = "0.12.13", features = ["sync"], optional = true }
+redis = { version = "0.26.1", optional = true }
+
+# 加密依赖
+aes = { version = "0.8.3", optional = true }
+aes-gcm = { version = "0.10.0", optional = true }
+ring = { version = "0.17.12", optional = true }
+base64 = "0.22.1"
+hex = "0.4.3"
+jwt = { version = "0.16.0", optional = true }
+jwt-simple = { version = "0.11.3", optional = true }
+
+# 工具依赖
+uuid = { version = "1", features = ["v4"] }
+serde = { version = "1", features = ["derive"] }
+chrono = { version = "0.4.43", features = ["serde"], optional = true }
+serde_json = "1"
+simd-json = { version = "0.12.0", optional = true }
+log = "0.4"
+env_logger = "0.11.8"
+hyper = "1.4.1"
+clap = { version = "4", features = ["derive"] }
+bloom_filter = "0.1.0"
+rand = { version = "0.8.5", optional = true }
+urlencoding = "2.1.0"
+url = "2.5.0"
+semver = "1.0.23"
+rmp-serde = { version = "1.1.2", optional = true }
+bincode = { version = "2.0.1", features = ["serde"], optional = true }
+serde_cbor = { version = "0.11.2", optional = true }
+serde_yaml = { version = "0.9.34", optional = true }
+lazy_static = "1.4.0"
+
+# 国际化支持（通过功能标志控制）
+i18n-embed = { version = "0.14.0", optional = true }
+# i18n-embed-fl 已移除，因依赖过旧且未维护
+# fluent 已移除，因依赖过旧
+# fluent-syntax 已移除，因依赖过旧
+# fluent-bundle 已移除，因依赖过旧
+
+# HTTP3支持（通过功能标志控制）
+h3 = { version = "0.0.8", optional = true }
+h3-quinn = { version = "0.0.10", optional = true }
+quinn = { version = "0.11.9", optional = true }
+rcgen = { version = "0.14.7", optional = true }
+time = { version = "0.3.36", optional = true }
+rustls = { version = "0.21.10" }
+rustls-pemfile = { version = "2.1.0" }
+rustls-native-certs = { version = "0.7.0" }
+tokio-rustls = { version = "0.25.0" }
+bytes = { version = "1.11.1", optional = true }
+http = { version = "1.1.0", optional = true }
+
+# 错误处理
+thiserror = "1"
+anyhow = "1"
+async-trait = "0.1"
+dyn-clone = "1.0"
+
+# 文件处理
+tempfile = { version = "3", optional = true }
+
+# 网络请求（通过功能标志控制）
+reqwest = { version = "0.13.1", features = ["blocking", "json"], optional = true }
+
+# 支付集成（通过功能标志控制）
+# stripe-rust 已移除，因依赖问题
+# paypal-rs 已移除，因依赖问题
+# rusoto_core 已移除，因依赖过旧且未维护
+# rusoto_s3 已移除，因依赖过旧且未维护
+
+# 正则表达式（通过功能标志控制）
+regex = { version = "1.11.0", optional = true }
+
+# 压缩解压（通过功能标志控制）
+zip = { version = "0.6.6", features = ["deflate"], optional = true }
+flate2 = { version = "1", optional = true }
+
+# 配置处理
+toml = { version = "0.9.0", optional = true }
+
+# 异步支持
+futures = "0.3"
+
+# 加密和安全（通过功能标志控制）
+rsa = { version = "0.9.7", features = ["sha2", "std"], optional = true }
+
+# 系统信息依赖
+num_cpus = "1.16.0"
+
+# 系统信息（通过功能标志控制）
+sysinfo = { version = "0.31.0", optional = true }
+
+# 动态加载（通过功能标志控制）
+libloading = { version = "0.9.0", optional = true }
+
+# UI系统依赖（通过功能标志控制）
+# godot和godot-sys已移除，因依赖过旧且存在安全漏洞
+
+# WebSocket依赖（用于UI通信）
+tokio-tungstenite = { version = "0.22.0", optional = true }
+
+# 性能测试和基准测试（开发依赖）
+criterion = { version = "0.6.0", optional = true }
+
+# 性能监控依赖
+prometheus = { version = "0.14.0", optional = true }
+prometheus-client = { version = "0.24.0", optional = true }
+ammonia = "4.1.2"
+
+# 功能标志
+[features]
+# 默认功能
+default = [
+    "database",
+    "cache",
+    "encryption",
+    "file_processing",
+    "network_request",
+    "regex_support",
+    "compression",
+    "config",
+    "security",
+    "system_info",
+    "dynamic_loading",
+    "monitoring",
+    "i18n",
+    "rand",
+    "chrono",
+    "serialization",
+]
+
+# GUF集成支持
+guf = []
+
+# 国际化支持
+i18n = ["i18n-embed"]
+
+# 支付集成支持
+payment = [
+    "reqwest",
+    "chrono",
+]
+
+# 监控支持
+monitoring = ["prometheus", "prometheus-client", "rand"]
+
+# 数据库支持
+database = [
+    "sqlx",
+    "sqlx/mysql",
+    "sqlx/postgres",
+    "sqlx/sqlite",
+]
+
+# 缓存支持
+cache = ["moka", "redis"]
+
+# 加密支持
+encryption = ["aes-gcm", "ring", "rsa", "rand"]
+
+# HTTP3支持
+http3 = ["h3", "h3-quinn", "quinn", "rcgen", "time", "bytes", "http"]
+
+# 文件处理支持
+file_processing = ["tempfile"]
+
+# 网络请求支持
+network_request = ["reqwest"]
+
+# 正则表达式支持
+regex_support = ["regex"]
+
+# 压缩解压支持
+compression = ["zip", "flate2"]
+
+# 配置处理支持
+config = ["toml", "serde_yaml"]
+
+# 安全支持
+security = ["rsa", "rand", "jwt", "jwt-simple"]
+
+# 序列化支持
+serialization = ["rmp-serde", "bincode", "simd-json", "serde_cbor"]
+
+# 系统信息支持
+system_info = ["sysinfo"]
+
+# 动态加载支持
+dynamic_loading = ["libloading"]
+
+# UI系统支持
+ui = [
+    "tokio-tungstenite",
+]
+
+# 沙箱相关依赖，仅在Linux平台启用
+[target.'cfg(target_os = "linux")'.dependencies]
+libseccomp = "0.3"
+
+[[bin]]
+name = "ymaxum"
+path = "src/main.rs"
+
+[[bin]]
+name = "ymaxum-simple"
+path = "src/main_simple.rs"
+
+[[bin]]
+name = "security_scanner"
+path = "src/bin/security_scanner.rs"
+
+[[bin]]
+name = "dependency_manager"
+path = "src/bin/dependency_manager.rs"
+
+[[bin]]
+name = "version_manager"
+path = "src/bin/version_manager.rs"
+
+[[bin]]
+name = "code_quality_checker"
+path = "src/bin/code_quality_checker.rs"
+
+[[bin]]
+name = "performance_test"
+path = "src/bin/performance_test.rs"
+
+[[example]]
+name = "basic_app"
+path = "examples/basicapp.rs"
+
+[[example]]
+name = "plugin_example"
+path = "examples/pluginexample.rs"
+
+[[example]]
+name = "scene_adapter"
+path = "examples/sceneadapter.rs"
+
+[dev-dependencies]
+# 性能测试和基准测试
+criterion = "0.6.0"
+tokio-test = "0.4.5"
+reqwest = { version = "0.13.1", features = ["blocking", "json"] }
+
+# pprof依赖已移除，因存在安全漏洞
+# [target.'cfg(not(target_os = "windows"))'.dev-dependencies]
+# pprof = { version = "0.13.0", features = ["flamegraph", "criterion"] }
+
+

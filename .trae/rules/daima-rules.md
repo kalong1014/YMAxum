@@ -1,0 +1,21 @@
+## 二、代码目录规范
+- S1.1 核心代码：src/core/，含state.rs、iterate_api.rs等核心模块
+  - S1.1.1 网络库：src/core/network/，含HTTP/HTTPS处理、客户端/服务器实现
+  - S1.1.2 序列化库：src/core/serialization/，含JSON、MessagePack、Bincode序列化/反序列化
+  - S1.1.3 配置管理库：src/core/config/，含多格式配置加载、监控和解析
+- S1.2 插件代码：plugins/，每个插件独立子目录
+- S1.3 命令解析引擎：src/command/
+- S1.4 安全防护模块：src/security/
+- S1.5 运维管理模块：src/ops/
+- S1.6 场景适配代码：src/scene/，含物流、能源等行业场景适配器
+- S1.7 模板文件：templates/
+- S1.8 GUF集成模块：src/guf/，含集成接口、配置管理、组件交互等模块
+- S1.9 第三方开源组件：third_party/，存放开源组件原码，用于软著申请时明确区分自研代码和开源代码
+- S1.10 开发工具：src/dev_tools/，含代码生成器、文档生成器等开发工具
+- S1.11 部署自动化：src/deployment/，含部署脚本、状态监控和回滚机制
+## 三、代码命名规范
+- S2.1 源文件：小写+下划线（如app_state.rs）
+- S2.2 核心模块文件：按功能命名（如state.rs）
+- S2.3 插件文件：含插件名称（如customer_service.rs）
+- S2.4 测试文件：以_test.rs结尾（如state_test.rs）
+- S2.5 脚本文件：Linux(.sh)、Windows(.bat)结尾

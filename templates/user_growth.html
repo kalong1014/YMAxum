@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用户成长与权限 - YMAxum</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .user-dashboard {
+            padding: 20px;
+            margin-bottom: 30px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+        }
+        .user-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .user-details {
+            flex: 1;
+        }
+        .user-details h2 {
+            margin: 0 0 10px 0;
+            color: #333;
+        }
+        .user-details p {
+            margin: 5px 0;
+            color: #555;
+        }
+        .level-display {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .level-badge {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border-radius: 30px;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .level-name {
+            font-size: 18px;
+            color: #333;
+            font-weight: 500;
+        }
+        .progress-section {
+            margin: 30px 0;
+        }
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        .progress-header h3 {
+            margin: 0;
+            color: #333;
+        }
+        .progress-header p {
+            margin: 0;
+            color: #555;
+        }
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background-color: #e9ecef;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        .progress-fill {
+            height: 100%;
+            background-color: #007bff;
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+        .permissions-section {
+            margin: 30px 0;
+        }
+        .permissions-section h3 {
+            margin: 0 0 20px 0;
+            color: #333;
+        }
+        .permissions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+        }
+        .permission-card {
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+            transition: box-shadow 0.3s;
+        }
+        .permission-card:hover {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .permission-card h4 {
+            margin: 0 0 10px 0;
+            color: #333;
+        }
+        .permission-card p {
+            margin: 5px 0;
+            color: #555;
+            font-size: 14px;
+        }
+        .permission-status {
+            margin-top: 10px;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+            text-align: center;
+        }
+        .permission-enabled {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .permission-disabled {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        .levels-section {
+            margin: 30px 0;
+        }
+        .levels-section h3 {
+            margin: 0 0 20px 0;
+            color: #333;
+        }
+        .levels-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        .level-card {
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        .level-card:hover {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+        .level-card.current {
+            border-color: #007bff;
+            background-color: #e3f2fd;
+        }
+        .level-card h4 {
+            margin: 0 0 10px 0;
+            color: #333;
+        }
+        .level-card .level-number {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .level-card.current .level-number {
+            color: #007bff;
+        }
+        .level-card p {
+            margin: 5px 0;
+            color: #555;
+            font-size: 14px;
+        }
+        .tasks-section {
+            margin: 30px 0;
+        }
+        .tasks-section h3 {
+            margin: 0 0 20px 0;
+            color: #333;
+        }
+        .tasks-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .task-item {
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: box-shadow 0.3s;
+        }
+        .task-item:hover {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .task-info {
+            flex: 1;
+        }
+        .task-info h4 {
+            margin: 0 0 5px 0;
+            color: #333;
+        }
+        .task-info p {
+            margin: 0;
+            color: #555;
+            font-size: 14px;
+        }
+        .task-reward {
+            text-align: right;
+            margin-right: 20px;
+        }
+        .task-reward p {
+            margin: 0;
+            color: #28a745;
+            font-weight: 500;
+        }
+        .btn {
+            display: inline-block;
+            padding: 8px 16px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .btn:hover {
+            background-color: #0069d9;
+        }
+        .btn-success {
+            background-color: #28a745;
+        }
+        .btn-success:hover {
+            background-color: #218838;
+        }
+        .btn-secondary {
+            background-color: #6c757d;
+        }
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+        .btn-disabled {
+            background-color: #6c757d;
+            cursor: not-allowed;
+        }
+        .alert {
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .alert-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .alert-info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>用户成长与权限</h1>
+        
+        {% if message %}
+        <div class="alert {% if success %}alert-success{% else %}alert-error{% endif %}">
+            {{ message }}
+        </div>
+        {% endif %}
+        
+        <div class="user-dashboard">
+            <div class="user-info">
+                <div class="user-details">
+                    <h2>{{ username }}</h2>
+                    <p><strong>注册时间：</strong>{{ registered_at }}</p>
+                    <p><strong>最后登录：</strong>{{ last_login }}</p>
+                </div>
+                <div class="level-display">
+                    <div class="level-badge">Lv{{ current_level }}</div>
+                    <div class="level-name">{{ current_level_name }}</div>
+                </div>
+            </div>
+            
+            <div class="progress-section">
+                <div class="progress-header">
+                    <h3>升级进度</h3>
+                    <p>{{ current_exp }} / {{ next_level_exp }} 贡献值</p>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: {{ progress_percentage }}%"></div>
+                </div>
+                <p>距离升级到 <strong>{{ next_level_name }}</strong> 还需 <strong>{{ remaining_exp }}</strong> 贡献值</p>
+            </div>
+        </div>
+        
+        <div class="permissions-section">
+            <h3>当前权限</h3>
+            <div class="permissions-grid">
+                <div class="permission-card">
+                    <h4>积分获取</h4>
+                    <p>通过各种方式获取积分</p>
+                    <div class="permission-status permission-enabled">已启用</div>
+                </div>
+                <div class="permission-card">
+                    <h4>积分消费</h4>
+                    <p>使用积分兑换商品或服务</p>
+                    <div class="permission-status permission-enabled">已启用</div>
+                </div>
+                <div class="permission-card">
+                    <h4>积分转让</h4>
+                    <p>将积分转让给其他用户</p>
+                    <div class="permission-status {% if can_transfer %}permission-enabled{% else %}permission-disabled{% endif %}">
+                        {% if can_transfer %}已启用{% else %}未启用{% endif %}
+                    </div>
+                </div>
+                <div class="permission-card">
+                    <h4>成果发布</h4>
+                    <p>发布原创成果</p>
+                    <div class="permission-status {% if can_publish %}permission-enabled{% else %}permission-disabled{% endif %}">
+                        {% if can_publish %}已启用{% else %}未启用{% endif %}
+                    </div>
+                </div>
+                <div class="permission-card">
+                    <h4>去中心化确权</h4>
+                    <p>为成果申请去中心化存证</p>
+                    <div class="permission-status {% if can_confirm %}permission-enabled{% else %}permission-disabled{% endif %}">
+                        {% if can_confirm %}已启用{% else %}未启用{% endif %}
+                    </div>
+                </div>
+                <div class="permission-card">
+                    <h4>邀请好友</h4>
+                    <p>邀请新用户注册并获得奖励</p>
+                    <div class="permission-status permission-enabled">已启用</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="levels-section">
+            <h3>等级体系</h3>
+            <div class="levels-grid">
+                <div class="level-card {% if current_level == 0 %}current{% endif %}">
+                    <h4>普通用户</h4>
+                    <div class="level-number">0</div>
+                    <p>注册即得</p>
+                    <p>基础权限</p>
+                </div>
+                <div class="level-card {% if current_level == 1 %}current{% endif %}">
+                    <h4>认证贡献者</h4>
+                    <div class="level-number">1</div>
+                    <p>完成身份认证</p>
+                    <p>成果发布权限</p>
+                </div>
+                <div class="level-card {% if current_level == 2 %}current{% endif %}">
+                    <h4>优质贡献者</h4>
+                    <div class="level-number">2</div>
+                    <p>解锁积分转让</p>
+                    <p>核心交易权限</p>
+                </div>
+                <div class="level-card {% if current_level == 3 %}current{% endif %}">
+                    <h4>头部贡献者</h4>
+                    <div class="level-number">3</div>
+                    <p>转让额度提升</p>
+                    <p>曝光加权</p>
+                </div>
+                <div class="level-card {% if current_level == 4 %}current{% endif %}">
+                    <h4>标杆创作者</h4>
+                    <div class="level-number">4</div>
+                    <p>无转让上限</p>
+                    <p>全平台推荐</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tasks-section">
+            <h3>成长任务</h3>
+            <div class="tasks-list">
+                {% if tasks %}
+                    {% for task in tasks %}
+                    <div class="task-item">
+                        <div class="task-info">
+                            <h4>{{ task.title }}</h4>
+                            <p>{{ task.description }}</p>
+                        </div>
+                        <div class="task-reward">
+                            <p>奖励：{{ task.reward_exp }} 贡献值</p>
+                            <p>{% if task.completed %}已完成{% else %}未完成{% endif %}</p>
+                        </div>
+                        {% if not task.completed %}
+                        <button class="btn btn-success" onclick="completeTask('{{ task.id }}')">完成任务</button>
+                        {% else %}
+                        <button class="btn btn-secondary btn-disabled" disabled>已完成</button>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <p>暂无成长任务</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 显示加载状态
+        function showLoading(element) {
+            element.disabled = true;
+            element.innerHTML = '处理中...';
+        }
+        
+        // 隐藏加载状态
+        function hideLoading(element, originalText) {
+            element.disabled = false;
+            element.innerHTML = originalText;
+        }
+        
+        // 显示错误信息
+        function showError(message) {
+            alert('错误：' + message);
+        }
+        
+        // 显示成功信息
+        function showSuccess(message) {
+            alert('成功：' + message);
+        }
+        
+        // 完成任务
+        async function completeTask(taskId) {
+            const button = document.querySelector(`button[onclick="completeTask('${taskId}')"]`);
+            if (!button) return;
+            
+            const originalText = button.innerHTML;
+            showLoading(button);
+            
+            try {
+                // 发送完成任务请求到后端API
+                const response = await fetch('/api/user/task/complete', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        task_id: taskId
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error('完成任务失败');
+                }
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showSuccess('任务完成！获得 ' + result.data.reward_exp + ' 贡献值奖励。');
+                    // 刷新页面
+                    window.location.reload();
+                } else {
+                    throw new Error(result.message || '完成任务失败');
+                }
+            } catch (error) {
+                showError(error.message);
+            } finally {
+                hideLoading(button, originalText);
+            }
+        }
+        
+        // 计算进度百分比
+        function calculateProgress(current, total) {
+            return Math.min(Math.round((current / total) * 100), 100);
+        }
+        
+        // 页面加载完成后初始化
+        window.onload = function() {
+            // 初始化进度条
+            const progressBars = document.querySelectorAll('.progress-fill');
+            progressBars.forEach(bar => {
+                const width = bar.style.width;
+                if (width) {
+                    bar.style.width = '0%';
+                    setTimeout(() => {
+                        bar.style.width = width;
+                    }, 100);
+                }
+            });
+        };
+        
+        // 定期更新用户状态
+        setInterval(async function() {
+            try {
+                const response = await fetch('/api/user/info');
+                
+                if (!response.ok) {
+                    throw new Error('获取用户信息失败');
+                }
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    // 更新用户等级和经验值
+                    const levelBadge = document.querySelector('.level-badge');
+                    const levelName = document.querySelector('.level-name');
+                    const progressText = document.querySelector('.progress-header p');
+                    const progressFill = document.querySelector('.progress-fill');
+                    const remainingText = document.querySelector('.progress-section p');
+                    
+                    if (levelBadge) {
+                        levelBadge.textContent = 'Lv' + result.data.level;
+                    }
+                    
+                    if (levelName) {
+                        levelName.textContent = result.data.level_name;
+                    }
+                    
+                    if (progressText) {
+                        progressText.textContent = result.data.current_exp + ' / ' + result.data.next_level_exp + ' 贡献值';
+                    }
+                    
+                    if (progressFill) {
+                        const percentage = calculateProgress(result.data.current_exp, result.data.next_level_exp);
+                        progressFill.style.width = percentage + '%';
+                    }
+                    
+                    if (remainingText) {
+                        const remaining = Math.max(0, result.data.next_level_exp - result.data.current_exp);
+                        remainingText.textContent = '距离升级到 ' + result.data.next_level_name + ' 还需 ' + remaining + ' 贡献值';
+                    }
+                }
+            } catch (error) {
+                console.error('更新用户状态失败:', error);
+            }
+        }, 30000); // 每30秒更新一次用户状态
+    </script>
+</body>
+</html>

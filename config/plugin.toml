@@ -1,0 +1,10 @@
+[plugin]
+plugin_dir = "./plugins"
+data_dir = "./data/plugins"
+auto_load = true
+auto_update = true
+
+[plugin.security]
+verify_signature = false
+allow_unsigned = true
+sandbox_enabled = false

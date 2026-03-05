@@ -1,0 +1,17 @@
+[package]
+name = "ymaxum-log-management"
+version = "1.0.0"
+edition = "2021"
+description = "YMAxum log management plugin"
+authors = ["YMAxum Team <team@ymaxum.com>"]
+license = "MIT"
+
+[dependencies]
+ymaxum = { path = "../.." }
+tokio = { version = "1.35.1", features = ["full"] }
+serde = { version = "1.0.193", features = ["derive"] }
+serde_json = "1.0.108"
+anyhow = "1.0.79"
+chrono = "0.4.31"
+log = "0.4.20"
+env_logger = "0.10.0"
